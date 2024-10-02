@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "61fcbd80-3d95-4b84-a1aa-a40dc0688279",
+		"name": "API Automation 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38531087"
+	},
+	"item": [
+		{
+			"name": "Add User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jasonData = JSON.parse(responseBody);",
+							"pm.globals.set(\"deviceID\", jasonData.id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"morpheus\",\n    \"job\": \"leader\"\n}\n\n/*{\n   \"name\": \"Apple MacBook Pro 16\",\n   \"data\": {\n      \"year\": 2019,\n      \"price\": 1849.99,\n      \"CPU model\": \"Intel Core i9\",\n      \"Hard disk size\": \"1 TB\"\n   }\n}*/",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse responseBody to Jason",
+							"var jasonData = JSON.parse(responseBody);",
+							"",
+							"// Convert name and job to string",
+							"var name = jasonData.name.toString();",
+							"var job = jasonData.job.toString();",
+							"",
+							"// Function to compare and log",
+							"function verifyResponse(value,expected,successMsg,errorMsg)",
+							"{",
+							"    if (value === expected)",
+							"    {",
+							"        console.log(successMsg);",
+							"    } else {",
+							"        console.log(errorMsg);",
+							"    }",
+							"}",
+							"",
+							"// Verify name and job with verifyResponse function",
+							"verifyResponse(name,\"Morpheus\",\"Name is successfully updated from morpheus to Morpheus\",\"Name hasn't been updated\");",
+							"verifyResponse(job,\"Engineer\",\"Job is successfully updated from leader to Engineer\",\"Job hasn't been updated\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"name\": \"Morpheus\",\n    \"job\": \"Engineer\"\n}\n\n\n/*\nhttps://api.restful-api.dev/objects/{{deviceID}}\n{\n    \"id\": \"ff8081819228c9da01922e8260a10eff\",\n    \"name\": \"Apple MacBook Pro 16\",\n    \"data\": {\n        \"year\": 2020,\n        \"price\": 2000,\n        \"CPU model\": \"Intel Core i9, 2nd Gen\",\n        \"Hard disk size\": \"2 TB\"\n    }\n}\n\n*/",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partially Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"Apple MacBook Pro 16 (Updated Name)\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.restful-api.dev/objects/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"pm.globals.unset(\"deviceID\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

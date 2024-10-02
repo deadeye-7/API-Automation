@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "7f900a0f-ef06-4660-b9b4-be20344aa6a4",
+		"name": "API Automation 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38531087"
+	},
+	"item": [
+		{
+			"name": "List of all objects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Apple\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.restful-api.dev/objects",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jasonData = JSON.parse(responseBody);",
+							"pm.globals.set(\"deviceID\", jasonData.id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n   \"name\": \"Apple MacBook Pro 16\",\n   \"data\": {\n      \"year\": 2019,\n      \"price\": 1849.99,\n      \"CPU model\": \"Intel Core i9\",\n      \"Hard disk size\": \"1 TB\"\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.restful-api.dev/objects",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse responseBody to Jason",
+							"var jasonData = JSON.parse(responseBody);",
+							"",
+							"// Convert name and job to string",
+							"var year = jasonData.data.year.toString();",
+							"var price = jasonData.data.price.toString();",
+							"",
+							"// Function to compare and log",
+							"function verifyResponse(value,expected,successMsg,errorMsg)",
+							"{",
+							"    if (value === expected)",
+							"    {",
+							"        console.log(successMsg);",
+							"    } else {",
+							"        console.log(errorMsg);",
+							"    }",
+							"}",
+							"",
+							"// Verify name and job with verifyResponse function",
+							"verifyResponse(year,\"2020\",\"Year is successfully updated from 2019 to 2020\",\"Year hasn't been updated\");",
+							"verifyResponse(price,\"2000\",\"Price is successfully updated from 1849.99 to 2000\",\"Job hasn't been updated\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"id\": \"ff8081819228c9da01922e8260a10eff\",\n    \"name\": \"Apple MacBook Pro 16\",\n    \"data\": {\n        \"year\": 2020,\n        \"price\": 2000,\n        \"CPU model\": \"Intel Core i9, 2nd Gen\",\n        \"Hard disk size\": \"2 TB\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.restful-api.dev/objects/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partially update object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Parse Request & Response data into Jason",
+							"var jsonRequest = JSON.parse(request.data);",
+							"var jsonResponse = JSON.parse(responseBody);",
+							"",
+							"// Comparing Request and Response Names",
+							"if (jsonRequest.name === jsonResponse.name)",
+							"{",
+							"    console.log(\"Patch worked perfectly\");",
+							"}else",
+							"{",
+							"    console.log(\"Patch failed: Name doesn't match\");",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"Apple MacBook Pro 16 (Patch)\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.restful-api.dev/objects/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.restful-api.dev/objects/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"// Reset Global variable",
+							"pm.globals.unset(\"deviceID\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://api.restful-api.dev/objects/{{deviceID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"restful-api",
+						"dev"
+					],
+					"path": [
+						"objects",
+						"{{deviceID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
