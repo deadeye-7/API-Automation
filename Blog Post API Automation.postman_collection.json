@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "4de83f0d-a2cc-47e7-9b33-e4063876b2ba",
+		"name": "Blog Post API Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38531087"
+	},
+	"item": [
+		{
+			"name": "Get all posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validating the status code 200 ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"// Check if the response contains at least 10 posts",
+							"pm.test(\"Response contains at least 10 posts\", function(){",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.be.at.least(10);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				},
+				"description": "Retrieve all posts and verify the response has at least 10 entries"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validate the status code 201",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// Parse request & response body",
+							"var jsonRequest = JSON.parse(pm.request.body.raw);",
+							"var jsonResponse = pm.response.json();",
+							"",
+							"// Check request & response title and body",
+							"pm.test(\"Response contains correct title and body\", function(){",
+							"    pm.expect(jsonRequest.title).to.equal(jsonResponse.title);",
+							"    pm.expect(jsonRequest.body).to.equal(jsonResponse.body);",
+							"})",
+							"",
+							"// Saving the postID in an environment variable",
+							"pm.collectionVariables.set(\"post_id\", jsonResponse.id);",
+							"console.log(jsonResponse.id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"title\": \"My new blog post\",\n    \"body\": \"This is the body of my new post.\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				},
+				"description": "- Create a new blog post with the title, body, and userId.\n    \n- Verify the response of the newly created post."
+			},
+			"response": []
+		},
+		{
+			"name": "Update the blog post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validating the status code 200 ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Parse request & response body",
+							"var jsonRequest = JSON.parse(pm.request.body.raw);",
+							"var jsonResponse = pm.response.json();",
+							"",
+							"// Check request & response title and body",
+							"pm.test(\"Response has correct title & body\", function(){",
+							"    pm.expect(jsonRequest.title).to.equal(jsonResponse.title);",
+							"    pm.expect(jsonRequest.body).to.equal(jsonResponse.body);",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"title\": \"Updated Blog Post Title\",\n    \"body\": \"Updated body content.\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/1",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"1"
+					]
+				},
+				"description": "Update the title of the new blog post."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the blog post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validating the status code 200 ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Check if the response body is an empty",
+							"pm.test(\"Response body is empty\", function(){",
+							"",
+							"    pm.expect(pm.response.json()).to.be.empty;",
+							"",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/1",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"1"
+					]
+				},
+				"description": "Delete the blog post and confirm it was successfully removed."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "post_id",
+			"value": ""
+		}
+	]
+}
